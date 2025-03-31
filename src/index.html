@@ -11,7 +11,9 @@
 <body class="container mt-4">
     <h1 class="text-center mb-4">Inventory Management</h1>
 
+    <!-- Add Item Form -->
     <form id="addItemForm" class="row g-3">
+        <h3>Add New Item</h3>
         <div class="col-md-6">
             <input type="text" id="name" class="form-control" placeholder="Item Name" required>
         </div>
@@ -52,6 +54,24 @@
         </div>
     </form>
 
+    <!-- Update Item Form -->
+    <h3 class="mt-5">Update Item</h3>
+    <form id="updateItemForm" class="row g-3">
+        <div class="col-md-6">
+            <input type="text" id="updateName" class="form-control" placeholder="Item Name (to update)" required>
+        </div>
+        <div class="col-md-6">
+            <input type="number" id="updateQuantity" class="form-control" placeholder="New Quantity" required>
+        </div>
+        <div class="col-md-6">
+            <input type="number" id="updatePrice" class="form-control" placeholder="New Price" required>
+        </div>
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-warning">Update Item</button>
+        </div>
+    </form>
+
+    <!-- Inventory List -->
     <h2 class="mt-5">Inventory List</h2>
     <div id="inventoryList" class="list-group mt-3"></div>
 
