@@ -6,7 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const addItemForm = document.getElementById("addItemForm") as HTMLFormElement;
   const inventoryList = document.getElementById("inventoryList") as HTMLDivElement;
   const updateItemForm = document.getElementById("updateItemForm") as HTMLFormElement;
+  const searchBox = document.getElementById("searchBox") as HTMLInputElement;
 
+  searchBox.addEventListener("input", () => {
+      updateInventoryUI(searchBox.value); // Call update function on input change
+  });
+  
   addItemForm.onsubmit = (e) => {
     e.preventDefault();
     
@@ -37,8 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const itemName = (document.getElementById("updateName") as HTMLInputElement).value;
       const newQuantity = parseInt((document.getElementById("updateQuantity") as HTMLInputElement).value);
       const newPrice = parseFloat((document.getElementById("updatePrice") as HTMLInputElement).value);
+      const newSupplier = (document.getElementById("updateSupplier") as HTMLInputElement).value;
       
-      if (updateItem(itemName, { quantity: newQuantity, price: newPrice })) {
+      if (updateItem(itemName, { quantity: newQuantity, price: newPrice, supplier:newSupplier })) {
         alert("Item updated successfully!");
         (document.getElementById("updateItemForm") as HTMLFormElement).reset();
         updateInventoryUI();
@@ -48,51 +54,46 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
 
-  function updateInventoryUI() {
-    inventoryList.innerHTML = "";
-    getItems().forEach((item) => {
-      const itemElement = document.createElement("div");
-      itemElement.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
-
-      itemElement.innerHTML = `
-      <div>
-        <strong>${item.name}</strong> (${item.category}) - ${item.stockStatus}
-        <br> Price: $${item.price.toFixed(2)}, Quantity: ${item.quantity}
-        <br> Supplier: ${item.supplier} ${item.featured ? "<span class='badge bg-warning text-dark'>Featured</span>" : ""}
-        <br> ${item.specialNote ? `<em>Note: ${item.specialNote}</em>` : ""}
-      </div>
-      <button class="btn btn-danger btn-sm delete-btn" data-name="${item.name}">Delete</button>
-    `;
-
-
-      inventoryList.appendChild(itemElement);
-    });
-
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", (e) => {
-        const target = e.target as HTMLButtonElement;
-        console.log("Delete button clicked!", target); // Debugging log
-    
-        const itemName = target.getAttribute("data-name");
-        console.log("Item to delete:", itemName); // Debugging log
-    
-        if (itemName && deleteItem(itemName)) {
-          alert(`"${itemName}" has been deleted.`);
-          updateInventoryUI();
-        } else {
-          alert("Item not found!");
-        }
+    function updateInventoryUI(searchTerm = "") {
+      inventoryList.innerHTML = "";
+      const items = getItems().filter(item => 
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filter items based on search
+      );
+  
+      items.forEach((item) => {
+          const itemElement = document.createElement("div");
+          itemElement.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+  
+          itemElement.innerHTML = `
+          <div>
+              <strong>${item.name}</strong> (${item.category}) - ${item.stockStatus}
+              <br> Price: $${item.price.toFixed(2)}, Quantity: ${item.quantity}
+              <br> Supplier: ${item.supplier} ${item.featured ? "<span class='badge bg-warning text-dark'>Featured</span>" : ""}
+              <br> ${item.specialNote ? `<em>Note: ${item.specialNote}</em>` : ""}
+          </div>
+          <button class="btn btn-danger btn-sm delete-btn" data-name="${item.name}">Delete</button>
+          `;
+  
+          inventoryList.appendChild(itemElement);
       });
-    });
-    
+  
+      document.querySelectorAll(".delete-btn").forEach((button) => {
+          button.addEventListener("click", (e) => {
+              const target = e.target as HTMLButtonElement;
+              const itemName = target.getAttribute("data-name");
+              if (itemName && deleteItem(itemName)) {
+                  alert(`"${itemName}" has been deleted.`);
+                  updateInventoryUI(searchBox.value);
+              } else {
+                  alert("Item not found!");
+              }
+          });
+      });
   }
+  
 
   // Ensure stored items are displayed when page loads
   updateInventoryUI();
 
-  
-
-
-  
 });
 
