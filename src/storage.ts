@@ -1,3 +1,4 @@
+// # Author: Hasindu Chamath
 import { InventoryItem } from "./models";
 
 let inventory: InventoryItem[] = [];

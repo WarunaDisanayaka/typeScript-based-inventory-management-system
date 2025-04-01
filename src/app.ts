@@ -1,3 +1,4 @@
+// # Author: Hasindu Chamath
 import { addItem, getItems, searchItem,updateItem,deleteItem } from "./storage.js";
 import { InventoryItem } from "./models";
 
