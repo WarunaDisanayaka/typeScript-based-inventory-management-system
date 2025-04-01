@@ -1,9 +1,8 @@
 // # Author: Hasindu Chamath
-import { InventoryItem } from "./models";
 
 let inventory: InventoryItem[] = [];
 
-export function addItem(item: InventoryItem): boolean {
+ function addItem(item: InventoryItem): boolean {
   if (inventory.find((i) => i.id === item.id)) {
     console.error("Item ID must be unique!");
     return false;
@@ -12,21 +11,21 @@ export function addItem(item: InventoryItem): boolean {
   return true;
 }
 
-export function getItems(): InventoryItem[] {
+ function getItems(): InventoryItem[] {
   return inventory;
 }
 
-export function searchItem(name: string): InventoryItem | undefined {
+ function searchItem(name: string): InventoryItem | undefined {
   return inventory.find((item) => item.name.toLowerCase() === name.toLowerCase());
 }
 
 // Save items to local storage
-export function saveItems(items: InventoryItem[]) {
+ function saveItems(items: InventoryItem[]) {
   localStorage.setItem("inventory", JSON.stringify(items));
 }
 
 
-export function updateItem(name: string, updatedData: Partial<InventoryItem>): boolean {
+ function updateItem(name: string, updatedData: Partial<InventoryItem>): boolean {
   const items = getItems();
   const index = items.findIndex((item) => item.name === name);
   if (index === -1) return false; // Item not found
@@ -36,7 +35,7 @@ export function updateItem(name: string, updatedData: Partial<InventoryItem>): b
   return true;
 }
 
-export function deleteItem(name: string): boolean {
+ function deleteItem(name: string): boolean {
   const items = getItems();
   const index = items.findIndex((item) => item.name.toLowerCase() === name.toLowerCase());
   

@@ -1,5 +1,5 @@
 // # Author: Hasindu Chamath
-export interface InventoryItem {
+ interface InventoryItem {
     id: number;
     name: string;
     category: "Electronics" | "Furniture" | "Clothing" | "Tools" | "Miscellaneous";

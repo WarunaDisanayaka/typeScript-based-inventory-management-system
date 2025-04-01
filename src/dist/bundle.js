@@ -1,5 +1,5 @@
+"use strict";
 // # Author: Hasindu Chamath
-import { addItem, getItems, updateItem, deleteItem } from "./storage.js";
 document.addEventListener("DOMContentLoaded", () => {
     const addItemForm = document.getElementById("addItemForm");
     const inventoryList = document.getElementById("inventoryList");
@@ -77,3 +77,44 @@ document.addEventListener("DOMContentLoaded", () => {
     // Ensure stored items are displayed when page loads
     updateInventoryUI();
 });
+// # Author: Hasindu Chamath
+let inventory = [];
+function addItem(item) {
+    if (inventory.find((i) => i.id === item.id)) {
+        console.error("Item ID must be unique!");
+        return false;
+    }
+    inventory.push(item);
+    return true;
+}
+function getItems() {
+    return inventory;
+}
+function searchItem(name) {
+    return inventory.find((item) => item.name.toLowerCase() === name.toLowerCase());
+}
+// Save items to local storage
+function saveItems(items) {
+    localStorage.setItem("inventory", JSON.stringify(items));
+}
+function updateItem(name, updatedData) {
+    const items = getItems();
+    const index = items.findIndex((item) => item.name === name);
+    if (index === -1)
+        return false; // Item not found
+    items[index] = Object.assign(Object.assign({}, items[index]), updatedData); // Merge updates
+    saveItems(items);
+    return true;
+}
+function deleteItem(name) {
+    const items = getItems();
+    const index = items.findIndex((item) => item.name.toLowerCase() === name.toLowerCase());
+    if (index === -1)
+        return false; // Item not found
+    const confirmDelete = confirm(`Are you sure you want to delete "${name}"?`);
+    if (!confirmDelete)
+        return false;
+    items.splice(index, 1); // Remove item
+    saveItems(items);
+    return true;
+}

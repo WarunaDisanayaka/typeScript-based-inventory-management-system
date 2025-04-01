@@ -1,6 +1,4 @@
 // # Author: Hasindu Chamath
-import { addItem, getItems, searchItem,updateItem,deleteItem } from "./storage.js";
-import { InventoryItem } from "./models";
 
 document.addEventListener("DOMContentLoaded", () => {
   const addItemForm = document.getElementById("addItemForm") as HTMLFormElement;
