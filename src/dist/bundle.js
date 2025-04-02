@@ -1,6 +1,7 @@
 "use strict";
 // # Author: Hasindu Chamath
 document.addEventListener("DOMContentLoaded", () => {
+    var _a;
     const addItemForm = document.getElementById("addItemForm");
     const inventoryList = document.getElementById("inventoryList");
     const updateItemForm = document.getElementById("updateItemForm");
@@ -8,10 +9,23 @@ document.addEventListener("DOMContentLoaded", () => {
     searchBox.addEventListener("input", () => {
         updateInventoryUI(searchBox.value); // Call update function on input change
     });
+    (_a = document.getElementById("filterFeatured")) === null || _a === void 0 ? void 0 : _a.addEventListener("change", () => {
+        updateInventoryUI(searchBox.value);
+    });
     addItemForm.onsubmit = (e) => {
         e.preventDefault();
+        const id = parseInt(document.getElementById("id").value.trim());
+        if (!id) {
+            alert("Please enter a unique ID.");
+            return;
+        }
+        const existingItem = getItems().find(item => item.id === id);
+        if (existingItem) {
+            alert("ID already exists! Please enter a unique ID.");
+            return;
+        }
         const item = {
-            id: Date.now(),
+            id, // Use manually entered ID
             name: document.getElementById("name").value,
             category: document.getElementById("category").value,
             quantity: parseInt(document.getElementById("quantity").value),
@@ -44,13 +58,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     function updateInventoryUI(searchTerm = "") {
         inventoryList.innerHTML = "";
-        const items = getItems().filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filter items based on search
+        const filterFeatured = document.getElementById("filterFeatured").checked;
+        let items = getItems().filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filter by search term
         );
+        if (filterFeatured) {
+            items = items.filter(item => item.featured); // Filter only featured items
+        }
         items.forEach((item) => {
             const itemElement = document.createElement("div");
             itemElement.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
             itemElement.innerHTML = `
           <div>
+              <strong>${item.id}</strong>
               <strong>${item.name}</strong> (${item.category}) - ${item.stockStatus}
               <br> Price: $${item.price.toFixed(2)}, Quantity: ${item.quantity}
               <br> Supplier: ${item.supplier} ${item.featured ? "<span class='badge bg-warning text-dark'>Featured</span>" : ""}
